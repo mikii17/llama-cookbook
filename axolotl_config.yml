@@ -1,0 +1,90 @@
+# Axolotl Configuration for Llama 4 17B Fine-tuning
+
+# Model Configuration
+base_model: meta-llama/Llama-4-17B
+model_type: llama
+tokenizer_type: llama
+
+# Dataset Configuration
+datasets:
+  - path: your_dataset.json # Replace with your dataset path
+    type: json
+    field_instruction: instruction # Adjust based on your dataset format
+    field_input: input
+    field_output: output
+
+# Training Configuration
+sequence_len: 4096
+max_packed_sequence_len: 4096
+max_packed_no_ctx_sequence_len: 4096
+pad_to_sequence_len: true
+
+# Batch Size and Gradient Accumulation
+micro_batch_size: 1
+gradient_accumulation_steps: 8
+eval_batch_size: 1
+num_epochs: 3
+
+# Learning Rate and Optimization
+learning_rate: 2e-5
+lr_scheduler: cosine
+warmup_ratio: 0.03
+weight_decay: 0.01
+adam_beta1: 0.9
+adam_beta2: 0.999
+adam_epsilon: 1e-8
+max_grad_norm: 1.0
+
+# LoRA Configuration (Parameter Efficient Fine-tuning)
+adapter: lora
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+# Mixed Precision Training
+bf16: true
+fp16: false
+
+# Memory Optimization
+gradient_checkpointing: true
+flash_attention: true
+load_in_8bit: false
+load_in_4bit: false
+
+# Output Configuration
+output_dir: ./output
+save_steps: 100
+eval_steps: 100
+logging_steps: 10
+save_total_limit: 3
+
+# System Configuration
+deepspeed: null # Set to your deepspeed config if using deepspeed
+torch_distributed_port: 29500
+
+# Additional Training Parameters
+group_by_length: true
+logging_first_step: true
+logging_dir: ./logs
+save_safetensors: true
+save_only_model: false
+seed: 42
+
+# Validation Configuration
+eval_accumulation_steps: 1
+eval_table_size: 0
+eval_table_max_new_tokens: 128
+eval_max_new_tokens: 128
+
+# Special Tokens
+bos_token: "<s>"
+eos_token: "</s>"
+pad_token: "<pad>"
